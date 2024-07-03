@@ -1,0 +1,42 @@
+<div class="product" >
+    <div class="product-image" (click)="viewProduct(product)">
+        <a style="height: 227px;">
+            <img [src]="product.images[0]?.imageUrl" onerror="this.style.display='none'">
+            <img [src]="product.images[1]?.imageUrl" onerror="this.style.display='none'">
+        </a>
+        <!-- <p class="product-sale" *ngif="(product?.id)%3==0">Sale</p> -->
+        <button type="button" class="btn-favourite btn-circle ">
+            <i class="fa-solid fa-heart"></i>
+        </button>
+    </div>
+
+
+
+    <div class="product-content">
+        <a class="product-name d-flex justify-content-between align-items-center" (click)="viewProduct(product)">
+            <span class="item-title">{{product.title}}</span>
+            <span class="badge badge-pill bg-warning p-1">{{product.category.name}}</span>
+        </a>
+
+        <ul class="rating-stars">
+            <li class="stars-active" style="width: 90%;">
+                <img src="assets/images/stars-active.svg" alt="">
+            </li>
+           
+        </ul>
+
+
+        <div class="product-content__footer">
+            <div class="product-content__footer-price">
+                <h5 class="product-price">{{product.price}}$</h5>
+                <!-- <span *ngif="(product?.id)%3==0">$59.99</span> -->
+            </div>
+            <span class="product-atc rounded-circle">
+                <button type="button" class="btn btn-circle text-muted"
+                    (click)="addToShoppingCart(product)">
+                    <i class="fa fa-shopping-cart"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<header>
+    <div class="header-top header-top-border pt-10 pb-10">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col mt-10 mb-10">
+                    <div class="header-links">
+                        <a href="#">
+                            <i class="fa-solid fa-truck-moving"></i>
+                            <span>Track your order</span>
+                        </a>
+                        <a href="#">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Locate Store</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col order-2 order-xs-2 order-lg-12 mt-10 mb-10">
+                    <div class="header-account-links">
+                        <a href="#">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <span>Help</span>
+                        </a>
+                        <a routerLink="/auth" (click)="login()" *ngIf="!(accountService.currentUser$ | async) ">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>Login</span>
+                        </a>
+                        <a routerLink="/user" class="d-flex userProfile-Link" *ngIf="accountService.currentUser$|async">
+                            <img src="assets/images/avatar.jpg" class="d-inline rounded-circle" width="32" height="32"
+                                alt="avater" srcset="">
+                            <span class="d-lg-none d-sm-inline">My Profile</span>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="header-bottom header-bottom-one header-sticky" #headerSticky [class.is-sticky]="sticky">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+
+                <div class="col-lg-2 col-sm-8 col-8 mt-15 mb-15">
+                    <div class="header-logo">
+                        <a routerLink="/products">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            Jumira
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-4 order-lg-last">
+                    <div class="header-shop-links float-end">
+
+                        <a href="#" class="header-wishlist">
+                            <i class="fa-solid fa-heart text-danger"></i>
+                            <span class="number">{{wishCount}}</span>
+                        </a>
+                        <a (click)="cart.openCartlist()" class="header-cart">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            <span class="number">{{cartCount}}</span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6  order-12 order-xs-12 order-lg-2 mt-10 mb-10">
+                    <div class="">
+                        <form action="#" class="">
+                            <div class="input-group">
+                                <input type="search" class="form-control" style="width:55%" placeholder="Search">
+                                <select class="form-select">
+                                    <option value="">All type</option>
+                                    <option value="codex">Special</option>
+                                    <option value="comments">Only best</option>
+                                    <option value="content">Latest</option>
+                                </select>
+                                <button class="btn btn-warning">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<app-cart #cart></app-cart>

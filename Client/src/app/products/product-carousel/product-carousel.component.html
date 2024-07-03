@@ -1,0 +1,20 @@
+<owl-carousel-o [options]="slider1Settings" #myCarousel>
+    <ng-container *ngFor="let slide of product?.images">
+        <ng-template carouselSlide [id]="'12'">
+            <figure class="zoom-image" 
+                [style.backgroundPosition]="backgroundPos">
+                <img class="rounded" src="{{slide.imageUrl}}" alt="clothes"
+                    onerror="this.onerror = null;this.src='assets/images/ImageNotFound.png'; imgNotFounded=true">
+            </figure>
+        </ng-template>
+    </ng-container>
+</owl-carousel-o>
+<owl-carousel-o id="controll" [options]="slider2Settings" (dragging)="nextSlide($event)"
+    *ngIf="product.images  &&  product.images.length > 1 && !imgNotFounded">
+    <ng-container *ngFor="let slide of product?.images">
+        <ng-template carouselSlide [id]="'3'">
+            <img class="rounded" width="97" src="{{slide.imageUrl}}" alt="clothes"
+                onerror="this.onerror = null;this.src='assets/images/ImageNotFound.png'">
+        </ng-template>
+    </ng-container>
+</owl-carousel-o>

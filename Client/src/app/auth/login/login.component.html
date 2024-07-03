@@ -1,0 +1,115 @@
+<div id="main-wrapper" class="form-login-register">
+    <div class="container-fluid px-0">
+        <div class="row g-0 min-vh-100">
+            <div class="col-md-6 col-lg-7 bg-light">
+                <div class="hero-wrap d-flex align-items-center h-100">
+                    <div class="hero-mask opacity-8"></div>
+                    <div class="hero-bg hero-bg-scroll" style="background-image:url('assets/images/login-bg.jpg');">
+                    </div>
+                    <div class="hero-content mx-auto w-100 h-100 d-flex flex-column">
+                        <div class="container">
+                            <div class="row g-0 mt-5">
+                                <div class="col-11 col-md-10 col-lg-9 mx-auto">
+                                    <h1 class="text-13 text-white fw-600 mb-4">
+                                        To keep connected with largest shop in the world.
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-5 d-flex flex-column align-items-center">
+                <div class="container pt-4">
+                    <div class="row g-0">
+                        <div class="col-11 col-md-10 col-lg-9 mx-auto">
+                            <div class="logo">
+                                <a class="fw-600 text-6 text-dark" routerLink="/" title="Store">
+                                    Store
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container my-auto py-5">
+                    <div class="row g-0">
+                        <div class="col-11 col-md-10 col-lg-9 mx-auto">
+                            <h3 class="text-12 mb-4">Sign In</h3>
+                            <form id="loginForm" [formGroup]="loginFormGroup">
+                                <label class="form-label fw-500" for="emailAddress">Email Address</label>
+                                <div
+                                    [classList]="loginForm['email'].invalid && isSubmitted?'input-group':'mb-3 input-group'">
+                                    <input type="email" class="form-control bg-light border-light" id="emailAddress"
+                                        [class.is-invalid]="loginForm['email'].invalid && isSubmitted"
+                                        placeholder="Email or Username" formControlName="email">
+                                    <span class="input-group-text text-muted">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </div>
+                                <small *ngIf="loginForm['email'].invalid && isSubmitted" class=" d-block text-danger">
+                                    <span *ngIf="loginForm['email'].errors?.['required']">Email is required</span>
+                                    <span *ngIf="loginForm['email'].errors?.['email']">Email is invalid</span>
+                                </small>
+                                <label class="form-label fw-500" for="loginPassword">Password</label>
+                                <div
+                                    [classList]="loginForm['password'].invalid && isSubmitted?'input-group':'mb-3 input-group'">
+                                    <input [type]="passwordVisible?'text':'password'"
+                                        class="form-control form-control-lg bg-light border-light" id="loginPassword"
+                                        [class.is-invalid]="loginForm['password'].invalid && isSubmitted" autocomplete
+                                        placeholder="Password" formControlName="password">
+                                    <span class="input-group-text text-muted" (click)="visibilityToggle()"
+                                        style="cursor: pointer;">
+                                        <i [classList]="passwordVisible?'fas fa-eye':'fas fa-eye-slash'"></i>
+                                    </span>
+                                </div>
+                                <small *ngIf="loginForm['password'].invalid && isSubmitted" class="d-block text-danger">
+                                    Password is required
+                                </small>
+                                <div class="row my-4">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input id="remember-me" name="remember" class="form-check-input"
+                                                type="checkbox">
+                                            <label class="form-check-label" for="remember-me">Remember Me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col text-end">
+                                        <a routerLink="/auth/forget-password">
+                                            Forgot Password ?
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-grid my-4">
+                                    <button class="btn btn-dark btn-lg" type="submit" (click)="onSubmit()">
+                                        Sign In
+                                    </button>
+                                </div>
+                                <div class="col-12" *ngIf="isSubmitted && authError">
+                                    <small class="d-block text-danger">{{ authMessage }}</small>
+                                </div>
+                                <p class="text-2 text-muted text-center">
+                                    Not a member? <a routerLink="/auth/register">Sign Up now</a>
+                                </p>
+                            </form>
+                            <table class="table table-sm table-dark rounded mt-3">
+                                <tbody>
+                                    <tr class="p-2">
+                                        <th scope="row">Email Address</th>
+                                        <td>john@mail.com</td>                                        
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">Password</td>
+                                        <td>changeme</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
