@@ -1,8 +1,7 @@
 ﻿namespace Core.Entities
 {
-    public class ProductImage
+    public class ProductImage : BaseEntity
     {
-        public int Id { get; set; }
         public int ProductId { get; set; }
         public string ImageUrl { get; set; }
 

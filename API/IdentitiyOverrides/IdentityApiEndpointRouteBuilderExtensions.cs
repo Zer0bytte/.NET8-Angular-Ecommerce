@@ -3,7 +3,7 @@
 
 using API.IdentitiyOverrides;
 using Azure.Core;
-using Core.Entities;
+using Core.Entities.Identity;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;

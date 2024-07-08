@@ -10,5 +10,12 @@ namespace API.Extensions
             return userId;
 
         }
+
+        public static string GetUserEmail(this ClaimsPrincipal claims)
+        {
+            string email = claims.FindFirst(ClaimTypes.Email).Value;
+            return email;
+
+        }
     }
 }

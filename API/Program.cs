@@ -1,7 +1,7 @@
 using API.Extensions;
 using API.Extinsions;
 using API.Overrides;
-using Core.Entities;
+using Core.Entities.Identity;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

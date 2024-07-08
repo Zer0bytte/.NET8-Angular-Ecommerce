@@ -21,12 +21,12 @@ namespace Infrastructure.Services
             this._context = context;
             this._mapper = mapper;
         }
-        public async Task AddToCart(int productId, string basketId)
+        public async Task AddToCart(int productId, string cartId)
         {
             var product = _mapper.Map<ProductDto>(await _context.Products
                 .Include(prd => prd.Images)
                 .FirstOrDefaultAsync(prd => prd.Id == productId));
-            var cart = await GetCartItems(basketId);
+            var cart = await GetCartItems(cartId);
             if (cart is null)
             {
                 cart = new CartDto();
@@ -34,7 +34,6 @@ namespace Infrastructure.Services
                 {
                     Product = product,
                     Quantity = 1
-
                 };
                 cart.CartItems.Add(cartItem);
             }
@@ -55,35 +54,39 @@ namespace Infrastructure.Services
                 }
             }
 
-            await SaveBasket(basketId, cart);
+            await SaveCart(cartId, cart);
         }
 
 
-        public async Task<CartDto> GetCartItems(string basketId)
+        public async Task<CartDto> GetCartItems(string cartId)
         {
-            var data = await _database.StringGetAsync(basketId);
+            var data = await _database.StringGetAsync(cartId);
             if (data.IsNullOrEmpty) return null;
             var cart = JsonSerializer.Deserialize<CartDto>(data);
             return cart;
         }
 
-        public async Task<bool> UpdateCartQuantity(int productId, string basketId, int quantity)
+        public async Task<bool> UpdateCartQuantity(int productId, string cartId, int quantity)
         {
-            var basket = await GetCartItems(basketId);
-            var basketItem = basket.CartItems.Find(ci => ci.Product.Id == productId);
-            if (basketItem is not null)
+            var cart = await GetCartItems(cartId);
+            var cartItem = cart.CartItems.Find(ci => ci.Product.Id == productId);
+            if (cartItem is not null)
             {
-                basketItem.Quantity = quantity;
-                await SaveBasket(basketId, basket);
+                cartItem.Quantity = quantity;
+                await SaveCart(cartId, cart);
                 return true;
             }
             return false;
         }
-        public async Task SaveBasket(string basketId, object value)
+        public async Task SaveCart(string cartId, object value)
         {
-            await _database.StringSetAsync(basketId, JsonSerializer.Serialize(value));
+            await _database.StringSetAsync(cartId, JsonSerializer.Serialize(value));
 
         }
 
+        public async Task DeleteCart(string cartId)
+        {
+            var result = await _database.KeyDeleteAsync(cartId);
+        }
     }
 }

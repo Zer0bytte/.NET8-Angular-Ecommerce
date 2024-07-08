@@ -49,8 +49,8 @@ namespace Infrastructure.Seeds
                 {
                     CategoryId = categoryId,
                     Title = product.title,
-                    Price = product.price,
                     Brand = product.brand,
+                    Price = product.price,
                     Stock = product.stock,
                     Description = product.description,
                     Tags = string.Join(';', product.tags)

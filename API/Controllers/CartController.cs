@@ -2,7 +2,7 @@
 using Azure.Core;
 using Core.Dtos;
 using Core.Dtos.Requests;
-using Core.Entities;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

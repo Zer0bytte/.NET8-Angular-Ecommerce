@@ -1,10 +1,9 @@
 ﻿namespace Core.Entities
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        public int Id { get; set; }
         public string Title { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Tags { get; set; }
         public string Brand { get; set; }

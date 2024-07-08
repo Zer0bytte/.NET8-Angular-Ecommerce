@@ -14,7 +14,7 @@ namespace Infrastructure.Services
         public string description { get; set; }
         public string category { get; set; }
         public string brand { get; set; }
-        public float price { get; set; }
+        public decimal price { get; set; }
         public int stock { get; set; }
         public string[] tags { get; set; }
         public List<string> images { get; set; }
