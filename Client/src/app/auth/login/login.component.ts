@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Notyf } from 'notyf';
-import { LoginModel } from 'src/app/_models/loginModel';
+import { LoginModel } from 'src/app/shared/models/loginModel';
 import { AccountService } from 'src/app/_services/account.service';
 
 @Component({

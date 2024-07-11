@@ -17,7 +17,8 @@ namespace Infrastructure.Data
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<DeliveryMethod> DeleiveryMethods{ get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+        public DbSet<Core.Entities.Address> Addresses { get; set; }
 
         public DataContext(DbContextOptions options) : base(options)
         {

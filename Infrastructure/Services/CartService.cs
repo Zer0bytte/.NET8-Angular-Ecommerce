@@ -24,7 +24,7 @@ namespace Infrastructure.Services
         public async Task AddToCart(int productId, string cartId)
         {
             var product = _mapper.Map<ProductDto>(await _context.Products
-                .Include(prd => prd.Images)
+                .Include(prd => prd.Images).Include(prd => prd.Category)
                 .FirstOrDefaultAsync(prd => prd.Id == productId));
             var cart = await GetCartItems(cartId);
             if (cart is null)
@@ -63,6 +63,7 @@ namespace Infrastructure.Services
             var data = await _database.StringGetAsync(cartId);
             if (data.IsNullOrEmpty) return null;
             var cart = JsonSerializer.Deserialize<CartDto>(data);
+            cart.Id = cartId;
             return cart;
         }
 

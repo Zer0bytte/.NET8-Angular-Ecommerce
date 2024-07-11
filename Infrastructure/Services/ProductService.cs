@@ -57,8 +57,7 @@ namespace Infrastructure.Services
                 Price = prd.Price,
                 Description = prd.Description,
                 Images = prd.Images,
-                Category = prd.Category,
-                CategoryId = prd.CategoryId,
+                Category = prd.Category.Name,
                 Stock = prd.Stock,
                 Brand = prd.Brand,
                 Tags = prd.Tags

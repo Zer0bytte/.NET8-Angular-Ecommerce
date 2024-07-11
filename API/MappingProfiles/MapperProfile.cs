@@ -10,15 +10,19 @@ namespace API.MappingProfiles
     {
         public MapperProfile()
         {
-            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Product, ProductDto>()
+                .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name))
+                .ReverseMap();
             CreateMap<CartItem, CartItemDto>().ReverseMap();
             CreateMap<OrderDto, Order>().ReverseMap();
-            CreateMap<AddressDto, Address>().ReverseMap();
+
+            CreateMap<AddressDto, Core.Entities.OrderAggregate.Address>().ReverseMap();
+            CreateMap<AddressDto, Core.Entities.Address>().ReverseMap();
 
 
             CreateMap<Order, OrderToReturnDto>()
                 .ForMember(d => d.DeliveryMethod, o => o.MapFrom(s => s.DeliveryMethod.ShortName))
-                .ForMember(d => d.ShoppingPrice, o => o.MapFrom(s => s.DeliveryMethod.Price));
+                .ForMember(d => d.ShippingPrice, o => o.MapFrom(s => s.DeliveryMethod.Price));
 
 
             CreateMap<OrderItem, OrderItemDto>()

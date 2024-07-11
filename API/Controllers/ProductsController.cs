@@ -20,7 +20,6 @@ namespace API.Controllers
         }
 
         [HttpGet("getProducts")]
-        [Authorize]
         public async Task<ActionResult> GetProducts([FromQuery] ProductsParams productsParams)
         {
             var user = User;

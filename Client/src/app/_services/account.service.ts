@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EmptyError, Observable, of } from 'rxjs';
-import { User } from '../_models/user';
+import { Address, User } from '../shared/models/user';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/envirnoments/environment.development';
-import { LoginModel } from '../_models/loginModel';
+import { LoginModel } from '../shared/models/loginModel';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class AccountService {
   baseApiUrl: string = environment.apiUrl;
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
-  user:User = {} as User;
+  user: User = {} as User;
   constructor(private http: HttpClient) { }
 
   login(loginModel: LoginModel) {
@@ -37,6 +37,11 @@ export class AccountService {
     const userJson = localStorage.getItem('user');
     const user: User = JSON.parse(userJson);
     return this.http.post(this.baseApiUrl + 'refresh', { refreshToken: user.refreshToken });
+  }
+
+
+  getUserAddress(){
+    return this.http.get<Address>(this.baseApiUrl + 'account');
   }
 
 }

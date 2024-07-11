@@ -15,7 +15,7 @@ namespace Infrastructure.Services
             this._unitOfWork = unitOfWork;
             this._cartService = cartService;
         }
-        public async Task<Order> CreateOrder(string buyerEmail, int deliveryMethodId, string cartId, Address shippingAddress)
+        public async Task<Order> CreateOrder(string buyerEmail, int deliveryMethodId, string cartId, Core.Entities.OrderAggregate.Address shippingAddress)
         {
             var cart = await _cartService.GetCartItems(cartId);
             if (cart == null) return null;

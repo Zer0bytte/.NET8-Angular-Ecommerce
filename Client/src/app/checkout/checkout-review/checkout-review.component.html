@@ -1,0 +1,55 @@
+<div class="table-responsive" *ngIf="cartList&&cartList.length > 0">
+    <table class="table">
+        <thead class="text-uppercase">
+            <tr>
+                <th>
+                    <div class="py-2">Product</div>
+                </th>
+                <th>
+                    <div class="py-2">Price</div>
+                </th>
+                <th>
+                    <div class="py-2 text-center">Quantity</div>
+                </th>
+                <th>
+                    <div class="py-2">Total</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of cartList">
+                <th>
+                    <div class="p-2 d-inline-block">
+                        <img src="{{item.product.images[0].imageUrl}}" alt="{{item.product.title}}" class="img-fluid"
+                            style="max-height: 50px;">
+                        <div class="ms-3 d-inline-block align-middle">
+                            <h6 class="mb-0">
+                                <a routerLink="/products/{{item.product.id}}" class="text-dark text-decoration-none">
+                                    {{item.product.title}}
+                                </a>
+                            </h6>
+                            <span class="text-muted fst-italic">
+                                Type: {{item.product.category}}
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <td class="align-middle"><strong>{{item.product.price| currency}}</strong></td>
+                <td class="align-middle text-center"><strong>{{ item.quantity}}</strong></td>
+                <td class="align-middle"><strong>{{item.product.price * item.quantity | currency}}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-between flex-row mb-5">
+    <button class="btn btn-outline-warning" cdkStepperPrevious>
+        <i class="fa fa-angle-left"> </i> Back review
+    </button>
+    <button class="btn btn-warning" cdkStepperNext>
+
+        Submit order
+        <i class="fa fa-angle-right"></i>
+
+    </button>
+</div>
