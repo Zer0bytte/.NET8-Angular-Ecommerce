@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.Execution;
 using Core.Dtos;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Core.Interfaces;
+using Core.Specification;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -12,41 +15,39 @@ namespace Infrastructure.Services
     public class CartService : ICartService
     {
         private readonly IDatabase _database;
-        private readonly DataContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CartService(IConnectionMultiplexer redis, DataContext context, IMapper mapper)
+        public CartService(IConnectionMultiplexer redis, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _database = redis.GetDatabase();
-            this._context = context;
+            this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
         public async Task AddToCart(int productId, string cartId)
         {
-            var product = _mapper.Map<ProductDto>(await _context.Products
-                .Include(prd => prd.Images).Include(prd => prd.Category)
-                .FirstOrDefaultAsync(prd => prd.Id == productId));
+
+            var spec = new ProductIncludeImagesRefSpecification(productId);
+
+            var product = await _unitOfWork.Repository<Product>().GetEntityWithSpec(spec);
+
+
             var cart = await GetCartItems(cartId);
             if (cart is null)
             {
                 cart = new CartDto();
-                CartItemDto cartItem = new CartItemDto
-                {
-                    Product = product,
-                    Quantity = 1
-                };
+                CartItemDto cartItem = _mapper.Map<CartItemDto>(product);
+                cartItem.Quantity = 1;
                 cart.CartItems.Add(cartItem);
             }
             else
             {
-                var cartItem = cart.CartItems.FirstOrDefault(c => c.Product.Id == productId);
+                CartItemDto cartItem = cart.CartItems.FirstOrDefault(c => c.Id == productId);
                 if (cartItem is null)
                 {
-                    cart.CartItems.Add(new CartItemDto
-                    {
-                        Product = product,
-                        Quantity = 1
-                    });
+                    cartItem = _mapper.Map<CartItemDto>(product);
+                    cartItem.Quantity = 1;
+                    cart.CartItems.Add(cartItem);
                 }
                 else
                 {
@@ -70,7 +71,7 @@ namespace Infrastructure.Services
         public async Task<bool> UpdateCartQuantity(int productId, string cartId, int quantity)
         {
             var cart = await GetCartItems(cartId);
-            var cartItem = cart.CartItems.Find(ci => ci.Product.Id == productId);
+            var cartItem = cart.CartItems.Find(ci => ci.Id == productId);
             if (cartItem is not null)
             {
                 cartItem.Quantity = quantity;
@@ -88,6 +89,20 @@ namespace Infrastructure.Services
         public async Task DeleteCart(string cartId)
         {
             var result = await _database.KeyDeleteAsync(cartId);
+        }
+
+        public async Task SetCartDeliveryMethod(string cartId, int dmId)
+        {
+
+            var cart = await GetCartItems(cartId);
+            cart.DeliveryMethodId = dmId;
+            var dM = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(dmId);
+            if (dM != null)
+            {
+                cart.ShippingPrice = dM.Price;
+
+            }
+            await SaveCart(cartId, cart);
         }
     }
 }

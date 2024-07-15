@@ -52,15 +52,15 @@
         </div>
         <div class="item" *ngFor="let cartItem of cartList">
             <div class="item-img">
-                <img [src]="cartItem.product.images[0].imageUrl"
+                <img [src]="cartItem.imageUrl"
                     onerror="this.onerror = null;this.src='assets/images/ImageNotFound.png'" alt="product_image">
             </div>
             <div class="item-description">
-                <a href="#" (click)="$event.preventDefault(); navigateToProductDetails(cartItem.product.id.toString())"
+                <a href="#" (click)="$event.preventDefault(); navigateToProductDetails(cartItem.id.toString())"
                     class="item-title">
-                    {{cartItem.product.title}}
+                    {{cartItem.title}}
                 </a>
-                <h5 class="item-price">${{cartItem.product.price}}</h5>
+                <h5 class="item-price">${{cartItem.price}}</h5>
                 <div class="input-group input-spinner">
                     <div class="quantity-selector">
                         <button type="button" class="btn  btn-quantity"
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="item-close-btn">
-                <a href="#" (click)="$event.preventDefault(); openCofirmModal(cartItem.product.id)">
+                <a href="#" (click)="$event.preventDefault(); openCofirmModal(cartItem.id)">
                     <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="close" width="1em" height="1em"
                         fill="currentColor" aria-hidden="true">
                         <path

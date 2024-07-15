@@ -26,6 +26,7 @@ namespace API.Extinsions
             });
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IProductsService, ProductService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

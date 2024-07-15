@@ -15,7 +15,11 @@ export class ProductComponent {
 
   addToShoppingCart(product: Product) {
     const cartItem: CartItem = {
-      product: product,
+      id: product.id,
+      category: product.category,
+      imageUrl: product.images[0].imageUrl,
+      price: product.price,
+      title: product.title,
       quantity: 1
     };
     this.cartService.setCartItem(cartItem);

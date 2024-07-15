@@ -7,13 +7,14 @@ public class Order : BaseEntity
 
     }
     public Order(IReadOnlyList<OrderItem> orderItems, string buyerEmail, Address shipToAddress,
-      DeliveryMethod deliveryMethod, decimal subTotal)
+      DeliveryMethod deliveryMethod, decimal subTotal, string paymentIntentId)
     {
         ShipToAddress = shipToAddress;
         BuyerEmail = buyerEmail;
         OrderItems = orderItems;
         SubTotal = subTotal;
         DeliveryMethod = deliveryMethod;
+        PaymentIntentId = paymentIntentId;
     }
 
     public Address ShipToAddress { get; set; }

@@ -13,7 +13,6 @@ namespace API.MappingProfiles
             CreateMap<Product, ProductDto>()
                 .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name))
                 .ReverseMap();
-            CreateMap<CartItem, CartItemDto>().ReverseMap();
             CreateMap<OrderDto, Order>().ReverseMap();
 
             CreateMap<AddressDto, Core.Entities.OrderAggregate.Address>().ReverseMap();
@@ -23,6 +22,12 @@ namespace API.MappingProfiles
             CreateMap<Order, OrderToReturnDto>()
                 .ForMember(d => d.DeliveryMethod, o => o.MapFrom(s => s.DeliveryMethod.ShortName))
                 .ForMember(d => d.ShippingPrice, o => o.MapFrom(s => s.DeliveryMethod.Price));
+
+            CreateMap<Product, CartItemDto>()
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.Images[0].ImageUrl)).
+                ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name));
+
+
 
 
             CreateMap<OrderItem, OrderItemDto>()

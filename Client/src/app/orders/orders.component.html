@@ -1,0 +1,43 @@
+<div class="row justify-content-center ">
+    <div class="col-8">
+        <div class="table-responsive">
+            <table class="table ">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>
+                            <div class="py-2 text-center">Order#</div>
+                        </th>
+                        <th>
+                            <div class="py-2 text-center">Status</div>
+                        </th>
+                        <th>
+                            <div class="py-2 text-center">Total</div>
+                        </th>
+                        <th>
+                            <div class="py-2 text-center">Date</div>
+                        </th>
+                        <th>
+                            <div class="py-2 text-center">Order Details</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders">
+                        <td class="align-middle text-center"><strong>{{order.id}}</strong></td>
+                        <td class="align-middle text-center">
+                            <strong>
+                                <span class="badge badge-primary">{{order.status}}</span>
+                            </strong>
+                        </td>
+                        <td class="align-middle text-center"><strong>{{order.total | currency}}</strong></td>
+                        <td class="align-middle text-center"><strong>{{order.orderDate | date}}</strong></td>
+                        <td class="align-middle text-center">
+                            <button class="btn btn-warning" routerLink="details/{{order.id}}">Details</button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

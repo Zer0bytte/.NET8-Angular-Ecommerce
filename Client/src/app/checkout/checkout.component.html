@@ -37,7 +37,7 @@
     <div class="container">
         <div class="row">
             <main class="col-xl-8 col-lg-8">
-                <app-stepper [linearModeSelected]="false" #appStepper>
+                <app-stepper [linearModeSelected]="true" #appStepper>
                     <cdk-step [label]="'Address'" [completed]="checkoutForm.get('addressForm')?.valid">
                         <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
                     </cdk-step>
@@ -45,9 +45,9 @@
                         <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
                     </cdk-step>
                     <cdk-step [label]="'Review'">
-                        <app-checkout-review></app-checkout-review>
+                        <app-checkout-review [stepper]="appStepper"></app-checkout-review>
                     </cdk-step>
-                    <cdk-step [label]="'Payment'">
+                    <cdk-step [label]="'Payment'" [completed]="checkoutForm.get('paymentForm')?.valid">
                         <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
                     </cdk-step>
                 </app-stepper>

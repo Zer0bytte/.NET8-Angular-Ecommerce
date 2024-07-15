@@ -3,9 +3,17 @@ import { Product } from "./products";
 export interface Cart {
     cartItems?: CartItem[];
     id: string;
+    clientSecret?: string;
+    paymentIntentId?: string;
+    deliveryMethodId?: number;
+    shippingPrice: number;
 }
 export interface CartItem {
-    product: Product;
+    id: number;
+    title: string;
+    price: number;
+    category: string;
+    imageUrl: string;
     quantity: number;
 }
 

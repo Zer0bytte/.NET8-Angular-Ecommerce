@@ -51,7 +51,8 @@ export class CartComponent implements OnInit {
   getTotalPrice() {
     this._cartService.basketTotalSource$.subscribe({
       next: result => {
-        this.totalPrice = result.subtotal;
+        if (result) this.totalPrice = result.subtotal;
+        else this.totalPrice = 0;
       }
     })
   }

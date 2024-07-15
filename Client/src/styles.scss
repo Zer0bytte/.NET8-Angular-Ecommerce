@@ -847,3 +847,8 @@ a:focus, a:active, .btn.active.focus,
         max-width: 100%;
     }
 }
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: auto;
+  }

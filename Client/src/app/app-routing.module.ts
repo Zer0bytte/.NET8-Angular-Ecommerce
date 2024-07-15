@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { MainLayoutComponent } from './core/main-layout/main-layout.component';
 import { LoginResolver } from './_guards/login.resolver';
-import { CheckoutComponent } from './checkout/checkout.component';
 
 const routes: Routes = [
   {
@@ -16,6 +15,7 @@ const routes: Routes = [
       },
       { path: 'products', loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule) },
       { path: 'checkout', loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule) },
+      { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
     ]
   },
   { path: 'login', component: LoginComponent, resolve: [LoginResolver] },

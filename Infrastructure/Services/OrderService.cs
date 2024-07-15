@@ -25,8 +25,8 @@ namespace Infrastructure.Services
 
             foreach (var item in cart.CartItems)
             {
-                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Product.Id);
-                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Title, item.Product.Images[0].ImageUrl);
+                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
+                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Title, item.ImageUrl);
                 var orderItem = new OrderItem(itemOrdered, productItem.Price, item.Quantity);
                 items.Add(orderItem);
             }
@@ -35,12 +35,26 @@ namespace Infrastructure.Services
 
             var subTotal = items.Sum(item => item.Price * item.Quantity);
 
-            var order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subTotal);
-            _unitOfWork.Repository<Order>().Add(order);
+
+            var spec = new OrderByPaymentIntentIdSpecification(cart.PaymentIntnetId);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+            if (order != null)
+            {
+                order.ShipToAddress = shippingAddress;
+                order.DeliveryMethod = deliveryMethod;
+                order.SubTotal = subTotal;
+                _unitOfWork.Repository<Order>().Update(order);
+            }
+            else
+            {
+                order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subTotal, cart.PaymentIntnetId);
+                _unitOfWork.Repository<Order>().Add(order);
+            }
+
+
             var result = await _unitOfWork.Complete();
             if (result <= 0) return null;
 
-            await _cartService.DeleteCart(cartId);
             return order;
         }
 

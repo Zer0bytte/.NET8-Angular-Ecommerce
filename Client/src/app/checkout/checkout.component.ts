@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartService } from 'src/app/_services/cart.service';
 import { CartItem } from '../shared/models/cart';
 import { AccountService } from '../_services/account.service';
+import { createApplication } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-checkout',
@@ -36,39 +37,24 @@ export class CheckoutComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     this.accountService.getUserAddress().subscribe({
       next: address => {
         address && this.checkoutForm.get('addressForm')?.patchValue(address);
       }
     })
-    this.getCartList();
+
+    this.getDeliveryMethodValue();
   }
 
 
-  getCartList() {
+  getDeliveryMethodValue() {
     this.cartService.cartObservable$.subscribe({
       next: cart => {
-        if (cart) {
-          this.cartList = cart.cartItems;
-          this.getTotalPrice();
-          this.isCartEmpty = false;
-        } else {
-          this.isCartEmpty = true;
+        if (cart && cart.deliveryMethodId) {
+          this.checkoutForm.get('deliveryForm')?.get('deliveryMethod')?.patchValue(cart.deliveryMethodId.toString());
         }
       }
     })
-  }
-
-  getTotalPrice() {
-    this.cartService.cartObservable$.subscribe((cart) => {
-      this.totalPrice = 0;
-      if (cart) {
-        cart.cartItems?.map((item) => {
-          this.totalPrice += item.product.price! * item.quantity!;
-        });
-      }
-    });
   }
 
 }

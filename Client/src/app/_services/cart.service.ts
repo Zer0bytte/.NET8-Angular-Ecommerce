@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { BasketTotals, Cart, CartItem } from '../shared/models/cart';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/envirnoments/environment.development';
@@ -10,24 +10,28 @@ import * as cuid from 'cuid';
   providedIn: 'root'
 })
 export class CartService {
-  cartSubject = new BehaviorSubject<Cart | null>(null);
+  baseApi: string = environment.apiUrl;
+
+  private cartSubject = new BehaviorSubject<Cart | null>(null);
   cartObservable$ = this.cartSubject.asObservable();
 
   private basketTotalSource = new BehaviorSubject<BasketTotals | null>(null);
   basketTotalSource$ = this.basketTotalSource.asObservable();
-  shipping: number = 0;
-  baseApi: string = environment.apiUrl + 'Cart/';
 
-  constructor(private http: HttpClient) {
-    // const intialCart = {
-    //   cartItems: [],
-    //   id: '0'
-    // };
-    //this.getCart();
+
+  constructor(private http: HttpClient) { }
+
+  createPaymentIntent() {
+    return this.http.post<Cart>(this.baseApi + 'Payments/' + this.getCurrentBasketValue()?.id, {})
+      .pipe(
+        map(cart => {
+          this.cartSubject.next(cart);
+        })
+      )
+
   }
-
   getCart(id: string) {
-    this.http.get<Cart>(this.baseApi + 'GetCartItems' + '/' + id).subscribe({
+    this.http.get<Cart>(this.baseApi + 'Cart/GetCartItems/' + id).subscribe({
       next: result => {
         this.cartSubject.next(result);
         this.calculateTotals();
@@ -35,25 +39,23 @@ export class CartService {
     })
   }
 
-  getCurrentBasketValue() {
+  getCurrentBasketValue(): Cart | null {
     return this.cartSubject.value;
   }
 
   private calculateTotals() {
     const basket = this.getCurrentBasketValue();
     if (!basket) return;
-    const subtotal = basket.cartItems.reduce((a, b) => (b.product.price * b.quantity) + a, 0);
-    const total = subtotal + this.shipping;
-    this.basketTotalSource.next({ shipping: this.shipping, total, subtotal });
+    const subtotal = basket.cartItems.reduce((a, b) => (b.price * b.quantity) + a, 0);
+    const total = subtotal + basket.shippingPrice;
+    this.basketTotalSource.next({ shipping: basket.shippingPrice, total, subtotal });
   }
 
 
   setCartItem(cartItem: CartItem) {
     const saved = this.getCurrentBasketValue() ?? this.createBasket();
-    console.log(saved);
-
-    this.http.post(this.baseApi + 'AddToShoppingCart', {
-      productId: cartItem.product.id,
+    this.http.post(this.baseApi + 'Cart/AddToShoppingCart', {
+      productId: cartItem.id,
       cartId: saved.id
     }, { responseType: 'text' }).subscribe({
       next: _ => {
@@ -64,7 +66,7 @@ export class CartService {
   }
 
   handleAddedCartItem(cartItem: CartItem, saved: Cart) {
-    var itemInCart = saved.cartItems.find(prd => prd.product.id === cartItem.product.id);
+    var itemInCart = saved.cartItems.find(prd => prd.id === cartItem.id);
     if (itemInCart === undefined) {
       saved.cartItems.push(cartItem);
     } else {
@@ -74,9 +76,10 @@ export class CartService {
   }
 
   createBasket() {
-    const basket = {
+    const basket: Cart = {
       cartItems: [],
-      id: cuid()
+      id: cuid(),
+      shippingPrice: 0
     }
 
     localStorage.setItem('basket_id', basket.id);
@@ -85,35 +88,50 @@ export class CartService {
   }
   updateCartItemQuantity(cartitem: CartItem) {
     const basketId = localStorage.getItem('basket_id');
-    this.http.post(this.baseApi + 'UpdateCartItem', {
-      ProductId: cartitem.product.id,
+    this.http.post(this.baseApi + 'Cart/UpdateCartItem', {
+      ProductId: cartitem.id,
       basketId: basketId,
       quantity: cartitem.quantity
     }, { responseType: 'text' }).subscribe({
       next: _ => {
         var cart = this.cartSubject.value;
-        console.log(cart);
-
-        var item = cart.cartItems.findIndex(c => c.product.id === cartitem.product.id)
+        var item = cart.cartItems.findIndex(c => c.id === cartitem.id)
         cart.cartItems[item].quantity = cartitem.quantity;
         this.cartSubject.next(cart);
         this.calculateTotals();
       }
     });
   }
-  
+
   removeCartItem(productId: number) {
 
   }
 
   setShippingPrice(dm: DeliveryMethod) {
-    this.shipping = dm.price;
-    this.calculateTotals();
+    const cart = this.getCurrentBasketValue();
+    if (cart) {
+      cart.shippingPrice = dm.price;
+      cart.deliveryMethodId = dm.id;
+      this.http.post(this.baseApi + 'Cart/SetDM', { cartId: cart.id, deliveryMethodId: dm.id }).subscribe({
+        next: _ => {
+          this.calculateTotals();
+        }
+      })
+    }
   }
 
   deleteLocalCart() {
     this.cartSubject.next(null);
     this.basketTotalSource.next(null);
     localStorage.removeItem('basket_id');
+  }
+
+
+  deleteCart(cart: Cart) {
+    return this.http.delete(this.baseApi + 'cart/deleteCart/' + cart.id).subscribe({
+      next: () => {
+        this.deleteLocalCart();
+      }
+    });
   }
 }

@@ -23,7 +23,11 @@ export class ProductDetailsComponent implements OnInit {
   addToCart(prod: Product) {
     debugger;
     const cartItem: CartItem = {
-      product: prod,
+      id: prod.id,
+      category: prod.category,
+      imageUrl: prod.images[0].imageUrl,
+      price: prod.price,
+      title: prod.title,
       quantity: 1
     };
     this.cartService.setCartItem(cartItem);
@@ -37,7 +41,7 @@ export class ProductDetailsComponent implements OnInit {
         this.cartService.cartObservable$.subscribe({
           next: products => {
             console.log(products);
-            const isItemExist = products.cartItems?.find(item => item.product.id == parseInt(id));
+            const isItemExist = products.cartItems?.find(item => item.id == parseInt(id));
 
             this.isInCart = isItemExist ? true : false;
           }

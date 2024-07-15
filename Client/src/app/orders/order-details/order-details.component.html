@@ -1,0 +1,83 @@
+<section class="padding-y ">
+    <div class="container">
+        <div class="row">
+            <main class="col-xl-8 col-lg-8">
+                <article class="card">
+                    <div class="content-body">
+                        <h5 class="card-title">Order Items</h5>
+                        <div class="table-responsive">
+                            <table class="table" *ngIf="order">
+                                <thead class="text-uppercase">
+                                    <tr>
+                                        <th>
+                                            <div class="py-2">Product</div>
+                                        </th>
+                                        <th>
+                                            <div class="py-2">Price</div>
+                                        </th>
+                                        <th>
+                                            <div class="py-2 text-center">Quantity</div>
+                                        </th>
+                                        <th>
+                                            <div class="py-2">Total</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of order.orderItems">
+                                        <th>
+                                            <div class="p-2 d-inline-block">
+                                                <img src="{{item.pictureUrl}}" alt="{{item.productName}}"
+                                                    class="img-fluid" style="max-height: 50px;">
+                                                <div class="ms-3 d-inline-block align-middle">
+                                                    <h6 class="mb-0">
+                                                        <a routerLink="/products/{{item.productId}}"
+                                                            class="text-dark text-decoration-none">
+                                                            {{item.productName}}
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <td class="align-middle"><strong>{{item.price| currency}}</strong></td>
+                                        <td class="align-middle text-center"><strong>{{ item.quantity}}</strong></td>
+                                        <td class="align-middle"><strong>{{item.price * item.quantity |
+                                                currency}}</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+            </main>
+
+            <aside class="col-xl-4 col-lg-4 bg-light" *ngIf="order">
+                <article class="ms-lg-4 mt-4 mt-lg-0 summary-body" style="max-width: 320px">
+                    <h5 class="card-title">Order Summary</h5>
+
+                    <dl class="dlist-align">
+                        <dt>Total price:</dt>
+                        <dd class="text-end"> ${{order.subTotal}}</dd>
+                    </dl>
+
+                    <dl class="dlist-align">
+                        <dt>Discount:</dt>
+                        <dd class="text-end text-danger"> - $0 </dd>
+                    </dl>
+
+                    <dl class="dlist-align">
+                        <dt>Shipping cost:</dt>
+                        <dd class="text-end"> {{order.shippingPrice}} </dd>
+                    </dl>
+
+                    <hr>
+                    <dl class="dlist-align">
+                        <dt> Total: </dt>
+                        <dd class="text-end"> <strong class="text-dark">${{order.total}}</strong> </dd>
+                    </dl>
+                </article>
+            </aside>
+        </div>
+        <br><br>
+    </div>
+</section>

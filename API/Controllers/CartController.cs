@@ -34,16 +34,6 @@ namespace API.Controllers
             var productExist = await _productsService.IsProductExist(request.ProductId);
             if (!productExist) return BadRequest("Failed to add this product to cart");
 
-            bool isUserAuthenticated = (User != null) && User.Identity.IsAuthenticated;
-            if (isUserAuthenticated)
-            {
-                //await _cartService.AddToCart(request.ProductId, User.GetUserId());
-            }
-            else
-            {
-
-            }
-
             await _cartService.AddToCart(request.ProductId, request.CartId);
             return Ok("Item added to cart");
         }
@@ -67,6 +57,13 @@ namespace API.Controllers
             return Ok(cartDto);
         }
 
+
+        [HttpPost("SetDM")]
+        public async Task<ActionResult> SetCartDeliveryMethod(SetCartDeliveryMethodDto dmDto)
+        {
+            await _cartService.SetCartDeliveryMethod(dmDto.CartId, dmDto.DeliveryMethodId);
+            return Ok();
+        }
         [HttpPost("UpdateCartItem")]
         public async Task<ActionResult> UpdateCartItem(UpdateCartItemRequest updateRequest)
         {
@@ -76,6 +73,14 @@ namespace API.Controllers
                 return Ok("Cart updated successfully");
             }
             return BadRequest("Failed to update cart item!");
+        }
+
+
+        [HttpDelete("deleteCart/{id}")]
+        public async Task<IActionResult> DeleteBasket(string id)
+        {
+            await _cartService.DeleteCart(id);
+            return Ok();
         }
     }
 }

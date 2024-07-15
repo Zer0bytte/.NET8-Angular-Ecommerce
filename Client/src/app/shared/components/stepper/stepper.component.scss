@@ -1,6 +1,12 @@
 button.navigation-link {
-    background:rgb(248 249 250);
+    background: rgb(248 249 250);
     border-radius: 0;
     border: none;
     color: #333;
+
+    &:disabled:not(.btn-warning) {
+        color: #333;
+        background: rgb(248 249 250);
+        
+    }
 }
